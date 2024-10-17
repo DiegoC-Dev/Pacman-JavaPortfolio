@@ -1,4 +1,4 @@
-# Pacman---java-portfolio
+# Pacman java-portfolio
 portfolio in java replicating the pacman game
 
 ## Author
