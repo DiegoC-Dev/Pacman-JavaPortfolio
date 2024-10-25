@@ -14,5 +14,5 @@ A Java adaptation of the classic Pacman game, developed using the Model-View-Pre
 If you'd like to hire me, feel free to contact me at DiegoCepeda.dev@gmail.com
 
 ## Licence 
-MIT Public Licence V3.0
-No puede usarse comercvialmente
+MIT Public License V3.0 
+Cannot be used commercially
