@@ -5,7 +5,7 @@ A Java adaptation of the classic Pacman game, developed using the Model-View-Pre
 **Diego Cepeda**
 * [LinkedIn] (www.linkedin.com/in/diego-cepeda-b2658a324)
 
-## Instalacion
+## Installation
 - Open the project in your IDE from the cloned folder.
 - Check that Java 8+ is installed and configured.
 - Compile and run the main file in your IDE or from the terminal.
