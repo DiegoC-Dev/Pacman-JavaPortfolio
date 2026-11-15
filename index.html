@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pacman Game - Java Portfolio</title>
+    <!-- CheerpJ WebAssembly Loader -->
+    <script src="https://cjrtnc.leaningtech.com/3.1/loader.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            background-color: #0b0b10;
+            color: #ffe600;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+        #loading {
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #ffe600;
+            z-index: 10;
+        }
+        .pac-loader {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #ffe600;
+            clip-path: polygon(100% 0%, 50% 50%, 100% 100%, 0% 100%, 0% 0%);
+            animation: chomp 0.4s ease-in-out infinite alternate;
+            margin-bottom: 20px;
+            box-shadow: 0 0 20px rgba(255, 230, 0, 0.6);
+        }
+        @keyframes chomp {
+            0% {
+                clip-path: polygon(100% 0%, 50% 50%, 100% 100%, 0% 100%, 0% 0%);
+            }
+            100% {
+                clip-path: polygon(100% 45%, 50% 50%, 100% 55%, 0% 100%, 0% 0%);
+            }
+        }
+        #game-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 0 35px rgba(33, 33, 222, 0.5);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    <div id="loading">
+        <div class="pac-loader"></div>
+        <p>Cargando Pacman en el navegador...</p>
+    </div>
+
+    <script type="module">
+        async function run() {
+            try {
+                await cheerpjInit();
+                cheerpjCreateDisplay(-1, -1, document.body);
+                const loading = document.getElementById('loading');
+                if (loading) loading.style.display = 'none';
+                await cheerpjRunJar("/app/Pacman.jar");
+            } catch (err) {
+                console.error("Error al iniciar CheerpJ:", err);
+                const loading = document.getElementById('loading');
+                if (loading) loading.innerHTML = '<p style="color: #ff4444;">Error al cargar el juego en el navegador.</p>';
+            }
+        }
+        run();
+    </script>
+</body>
+</html>
