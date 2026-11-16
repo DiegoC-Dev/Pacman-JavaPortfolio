@@ -36,6 +36,9 @@ public class Map {
 		BufferedReader bufferedReader;
 		try {
 			file = new File (PATH);
+			if (!file.exists()) {
+				file = new File ("/app/" + PATH);
+			}
 			fileReader = new FileReader(file);
 			bufferedReader = new BufferedReader(fileReader);
 			int row =0;

@@ -86,16 +86,19 @@ public class Control implements KeyListener,ActionListener{
 		
 		try {
 			soundFile = new File(path);
+			if (!soundFile.exists()) {
+				soundFile = new File("/app/" + path);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.exit(1);
+			return;
 		}
 		
 		try {
 			audioStream = AudioSystem.getAudioInputStream(soundFile);
 		} catch (Exception e){
 			e.printStackTrace();
-			System.exit(1);
+			return;
 		}
 		
 		audioFormat = audioStream.getFormat();
@@ -106,10 +109,10 @@ public class Control implements KeyListener,ActionListener{
 			sourceLine.open(audioFormat);
 		} catch (LineUnavailableException e) {
 			e.printStackTrace();
-			System.exit(1);
+			return;
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.exit(1);
+			return;
 		}
 		
 		sourceLine.start();
@@ -179,6 +182,9 @@ public class Control implements KeyListener,ActionListener{
 							&& pacmanManager.getNumberCookies() < 30 && !pacmanManager.map.isEndLevel()
 							&& pacmanManager.puckman.getLives() != 0) {
 						File soundFile = new File("resources/pacman_power_pellet.wav");
+						if (!soundFile.exists()) {
+							soundFile = new File("/app/resources/pacman_power_pellet.wav");
+						}
 						AudioInputStream audioStream = AudioSystem.getAudioInputStream(soundFile);
 						AudioFormat audioFormat = audioStream.getFormat();
 						DataLine.Info info = new DataLine.Info(SourceDataLine.class, audioFormat);
