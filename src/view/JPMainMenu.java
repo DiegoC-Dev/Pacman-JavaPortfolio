@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ActionListener;
 
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -36,14 +37,17 @@ public class JPMainMenu extends JPanel{
 		
 //		JLabel lblLogo = new JLabel(new ImageIcon(getClass().getResource("/img/pac-man.jpg")));
 		
+		add(Box.createVerticalStrut(10));
 		lblLogo = new JLabel(new ImageIcon(getClass().getResource("/img/letras3.png")));
 		lblLogo.setAlignmentX(CENTER_ALIGNMENT);
 		add(lblLogo);
 		
+		add(Box.createVerticalStrut(8));
 		lblLogo2 = new JLabel(new ImageIcon(getClass().getResource("/img/pacman-mov.gif")));
 		lblLogo2.setAlignmentX(CENTER_ALIGNMENT);
 		add(lblLogo2);
 		
+		add(Box.createVerticalStrut(12));
 		btnIncio = new JButton("Iniciar");
 		btnIncio.setBackground(Color.yellow);
 		btnIncio.setFocusable(false);

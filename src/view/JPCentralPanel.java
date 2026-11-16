@@ -4,6 +4,9 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -44,9 +47,17 @@ public class JPCentralPanel extends JPanel{
 		jButton.addKeyListener(control);
 		add(jButton,BorderLayout.NORTH);
 	}
+	private BufferedImage offscreenBuffer;
+
 	@Override
-	public void paint(Graphics graphics) {
-		super.paint(graphics);
+	public void paint(Graphics screenGraphics) {
+		super.paint(screenGraphics);
+		if (offscreenBuffer == null) {
+			offscreenBuffer = new BufferedImage(479, 607, BufferedImage.TYPE_INT_RGB);
+		}
+		Graphics graphics = offscreenBuffer.getGraphics();
+		graphics.setColor(Color.cyan);
+		graphics.fillRect(0, 0, 479, 607);
 		sendGameTime(gameTime);
 		int cont=0;
 //		cont++;
@@ -116,6 +127,14 @@ public class JPCentralPanel extends JPanel{
 		PacmanManager.puckman.drawRightWall(graphics);
 		PacmanManager.puckman.drawUpperWall(graphics);
 		PacmanManager.puckman.drawBottomWall(graphics);
+		graphics.dispose();
+		if (screenGraphics instanceof Graphics2D) {
+			Graphics2D g2d = (Graphics2D) screenGraphics;
+			g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+			g2d.drawImage(offscreenBuffer, 0, 0, getWidth(), getHeight(), null);
+		} else {
+			screenGraphics.drawImage(offscreenBuffer, 0, 0, getWidth(), getHeight(), null);
+		}
 //		graphics.fillRect(0, 0, 20, 20);	
 //		if(cont==1) {
 //			Control.pc.draw(graphics);			

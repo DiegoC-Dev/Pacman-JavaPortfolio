@@ -21,7 +21,8 @@
             align-items: center;
             justify-content: center;
             min-height: 100vh;
-            overflow: hidden;
+            padding: 8px;
+            overflow-y: auto;
         }
         #loading {
             position: absolute;
@@ -72,7 +73,7 @@
         async function run() {
             try {
                 await cheerpjInit();
-                cheerpjCreateDisplay(480, 690, document.getElementById('game-wrapper'));
+                cheerpjCreateDisplay(410, 525, document.getElementById('game-wrapper'));
                 const loading = document.getElementById('loading');
                 if (loading) loading.style.display = 'none';
                 await cheerpjRunJar("/app/Pacman.jar");

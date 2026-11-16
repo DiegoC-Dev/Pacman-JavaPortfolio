@@ -14,8 +14,8 @@ public class JFMainMenu extends JFrame{
 	Control control;
 	public JFMainMenu(Control control) {
 		setResizable(false);
-		setSize(470, 680);
-		setLocationRelativeTo(this);
+		setSize(400, 515);
+		setLocationRelativeTo(null);
 		setTitle("pacman vrs 9.0 ");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		Image icon = new ImageIcon(getClass().getResource("/img/icon.jpg")).getImage();

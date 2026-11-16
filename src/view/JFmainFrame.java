@@ -31,8 +31,8 @@ public class JFmainFrame extends JFrame{
 		this.control = control;
 //		setSize(Utilities.getDysplaySize());
 		setResizable(false);
-		setSize(470, 630);
-		setLocationRelativeTo(this);
+		setSize(400, 515);
+		setLocationRelativeTo(null);
 //		System.out.println("frame--> "+"w "+getWidth()+" - h "+getHeight());
 		setTitle("pacman vrs 9.0 ");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
