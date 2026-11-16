@@ -45,7 +45,7 @@ public class PinkyGui extends Pinky{
 	private void drawLabellScore(Graphics graphics) {
 		graphics.setFont(new Font("SansSerif", Font.PLAIN, 16));
 		if(labelScore == true) {
-			if(TimerLabelScore == 1) {
+			if(TimerLabelScore <= 25 || labelScoredCoordinates == null) {
 				labelScoredCoordinates = new Coord2D(coord2d.getX()+4,coord2d.getY()+16);
 				ghostScore = PacmanManager.ghostScore/2;
 			}
