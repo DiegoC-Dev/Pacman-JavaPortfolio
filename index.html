@@ -12,26 +12,28 @@
             margin: 0;
             padding: 0;
         }
-        body {
+        html, body {
+            width: 100%;
+            min-height: 100%;
             background-color: #0b0b10;
             color: #ffe600;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: auto;
+        }
+        body {
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            padding: 8px;
-            overflow-y: auto;
+            padding: 10px;
         }
         #loading {
-            position: absolute;
+            position: fixed;
+            inset: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             font-size: 1.2rem;
             color: #ffe600;
+            background-color: #0b0b10;
             z-index: 10;
         }
         .pac-loader {
@@ -52,13 +54,18 @@
                 clip-path: polygon(100% 45%, 50% 50%, 100% 55%, 0% 100%, 0% 0%);
             }
         }
-        #game-wrapper {
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        #scale-box {
+            margin: auto;
+            position: relative;
+            flex-shrink: 0;
             box-shadow: 0 0 35px rgba(33, 33, 222, 0.5);
             border-radius: 12px;
             overflow: hidden;
+        }
+        #game-wrapper {
+            width: 425px;
+            height: 545px;
+            transform-origin: top left;
         }
     </style>
 </head>
@@ -67,15 +74,42 @@
         <div class="pac-loader"></div>
         <p>Cargando Pacman en el navegador...</p>
     </div>
-    <div id="game-wrapper"></div>
+    <div id="scale-box">
+        <div id="game-wrapper"></div>
+    </div>
 
     <script>
+        const DISPLAY_W = 425;
+        const DISPLAY_H = 545;
+
+        function fitGameToViewport() {
+            const box = document.getElementById('scale-box');
+            const wrapper = document.getElementById('game-wrapper');
+            if (!box || !wrapper) return;
+            const availW = Math.max(240, window.innerWidth - 20);
+            const availH = Math.max(300, window.innerHeight - 20);
+            const scale = Math.min(1, availW / DISPLAY_W, availH / DISPLAY_H);
+            wrapper.style.transform = `scale(${scale})`;
+            box.style.width = `${Math.floor(DISPLAY_W * scale)}px`;
+            box.style.height = `${Math.floor(DISPLAY_H * scale)}px`;
+        }
+
+        window.addEventListener('resize', fitGameToViewport);
+        window.addEventListener('keydown', function (e) {
+            if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space'].includes(e.code)) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+
+        fitGameToViewport();
+
         async function run() {
             try {
                 await cheerpjInit();
-                cheerpjCreateDisplay(410, 525, document.getElementById('game-wrapper'));
+                cheerpjCreateDisplay(DISPLAY_W, DISPLAY_H, document.getElementById('game-wrapper'));
                 const loading = document.getElementById('loading');
                 if (loading) loading.style.display = 'none';
+                fitGameToViewport();
                 await cheerpjRunJar("/app/Pacman.jar");
             } catch (err) {
                 console.error("Error al iniciar CheerpJ:", err);
