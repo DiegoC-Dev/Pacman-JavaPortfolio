@@ -183,55 +183,110 @@ public class Control implements KeyListener,ActionListener{
 		pacmanManager.setGameTime(0);
 		Thread thread = new Thread(new Runnable() {
 			boolean init = true;
+			private static final int TICKS_PER_SECOND = 2800;
+			private static final long NANOS_PER_TICK = 1_000_000_000L / TICKS_PER_SECOND;
+			private static final long NANOS_PER_FRAME = 1_000_000_000L / 60;
+			private static final int WAIT_STEP = 120;
+
 			@Override
 			public void run() {
+				long lastTime = System.nanoTime();
+				long lastRenderTime = lastTime;
+				long accumulator = 0;
+
 				while (init) {
-					pacmanManager.setFruitTime(pacmanManager.getGameTime()>1000000?
-							pacmanManager.getFruitTime()+1:pacmanManager.getFruitTime());
+					long now = System.nanoTime();
+					long elapsed = now - lastTime;
+					lastTime = now;
+					if (elapsed > 100_000_000L) {
+						elapsed = 100_000_000L;
+					}
+					accumulator += elapsed;
+
+					while (accumulator >= NANOS_PER_TICK) {
+						accumulator -= NANOS_PER_TICK;
+
+						int currentGameTime = pacmanManager.getGameTime();
+						int waitThreshold = pacmanManager.isInitialSound() ? 1400000 : 1000000;
+						boolean isPlayingPhase = currentGameTime > waitThreshold;
+
+						pacmanManager.setFruitTime(currentGameTime>1000000?
+								pacmanManager.getFruitTime()+1:pacmanManager.getFruitTime());
 //					fruitTime=gameTime >1000000?fruitTime+1:fruitTime;
-					pacmanManager.setGameTime(pacmanManager.puckman.getLives()!=0?
-							pacmanManager.getGameTime()+1:-1);
+						if (pacmanManager.puckman.getLives()!=0) {
+							if (isPlayingPhase) {
+								pacmanManager.setGameTime(currentGameTime+1);
+							} else {
+								int nextGameTime = currentGameTime + WAIT_STEP;
+								if (currentGameTime < 0 && nextGameTime >= 0) {
+									nextGameTime = 0;
+								}
+								pacmanManager.setGameTime(nextGameTime);
+							}
+						} else {
+							pacmanManager.setGameTime(-1);
+						}
 //					gameTime=puckman.getLives()!=0?gameTime+1:-1;
 //					System.out.println(gameTime/100000);
-					if (pacmanManager.getNumberCookies()==20) {
-						pacmanManager.cherry.setVisibility(true);
-					}
-					if (pacmanManager.getNumberCookies()==30) {
-						pacmanManager.freezeCharacters();
-						pacmanManager.map.setVictory(true);
-						if(pacmanManager.map.isEndLevel()==false) {
-							pacmanManager.setNextLevelSoundSound(true);
+						if (pacmanManager.getNumberCookies()==20) {
+							pacmanManager.cherry.setVisibility(true);
 						}
+						if (pacmanManager.getNumberCookies()==30) {
+							pacmanManager.freezeCharacters();
+							pacmanManager.map.setVictory(true);
+							if(pacmanManager.map.isEndLevel()==false) {
+								pacmanManager.setNextLevelSoundSound(true);
+							}
 //						gameTime = 0;
-					}
-					sendGameTime();
-					if(pacmanManager.isInitialSound()==true?pacmanManager.getGameTime()>1400000:
-						pacmanManager.getGameTime()>1000000) {
-						pacmanManager.cherry.activateTimer();
-						pacmanManager.blinky.move();
-						pacmanManager.pinky.move();
+						}
+						sendGameTime();
+						if(isPlayingPhase) {
+							pacmanManager.cherry.activateTimer();
+							pacmanManager.blinky.move();
+							pacmanManager.pinky.move();
 						pacmanManager.inky.move();
 						pacmanManager.clyde.move();					
 						pacmanManager.puckman.move();//pacman
-					}
-					else {
-						pacmanManager.blinky.movetimer();
+						}
+						else {
+							pacmanManager.blinky.movetimer();
 						pacmanManager.pinky.movetimer();
 						pacmanManager.inky.movetimer();
 						pacmanManager.clyde.movetimer();
-						pacmanManager.puckman.deathTimer();
+							for (int i = 0; i < WAIT_STEP; i++) {
+								pacmanManager.puckman.deathTimer();
+							}
 //						puckman.movetimer();
-					}
-					pacmanManager.fruitDeath();
-					pacmanManager.scoreFruit();
-					pacmanManager.ghostDeath();
+						}
+						pacmanManager.fruitDeath();
+						pacmanManager.scoreFruit();
+						pacmanManager.ghostDeath();
 					pacmanManager.scoreGhost();
 					pacmanManager.coockieDeath();
 					pacmanManager.ghostRebirth();
 					pacmanManager.pacmanDeath();
 					pacmanManager.pacmanRebirth();
-					jFmainFrame.repaint();
-					pacmanManager.threadSleep();
+
+						if (pacmanManager.isThreadSleep()) {
+							jFmainFrame.repaint();
+							pacmanManager.threadSleep();
+							lastTime = System.nanoTime();
+							accumulator = 0;
+							break;
+						}
+					}
+
+					if (now - lastRenderTime >= NANOS_PER_FRAME) {
+						jFmainFrame.repaint();
+						lastRenderTime = now;
+					}
+
+					try {
+						Thread.sleep(1);
+					} catch (InterruptedException e) {
+						Thread.currentThread().interrupt();
+						break;
+					}
 				}
 			}
 		});
