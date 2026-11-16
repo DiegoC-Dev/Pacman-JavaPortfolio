@@ -1,8 +1,10 @@
 package view;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.event.ActionListener;
 
 import javax.swing.Box;
@@ -21,13 +23,10 @@ public class JPMainMenu extends JPanel{
 	private static final long serialVersionUID = 1L;
 	
 	private JButton btnIncio;
-	private JLabel lblSpace1;
 	private JButton btnAcerca;
-	private JLabel lblSpace;
 	private JButton btnSalir;
 	private JLabel lblLogo;
 	private JLabel lblLogo2;
-	private JLabel lblSpace2;
 	
 	private Control control;
 	public JPMainMenu(Control control) {
@@ -35,63 +34,58 @@ public class JPMainMenu extends JPanel{
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		setBackground(Color.BLACK);
 		
-//		JLabel lblLogo = new JLabel(new ImageIcon(getClass().getResource("/img/pac-man.jpg")));
+		Dimension winSize = Utilities.getAdaptiveWindowSize();
+		double ratio = Math.min(1.0, (double) winSize.height / 515.0);
+		int logoW = (int) Math.round(350 * ratio);
+		int logoH = (int) Math.round(59 * ratio);
 		
-		add(Box.createVerticalStrut(10));
-		lblLogo = new JLabel(new ImageIcon(getClass().getResource("/img/letras3.png")));
+		add(Box.createVerticalGlue());
+		ImageIcon rawLogo = new ImageIcon(getClass().getResource("/img/letras3.png"));
+		Image scaledLogo = rawLogo.getImage().getScaledInstance(logoW, logoH, Image.SCALE_SMOOTH);
+		lblLogo = new JLabel(new ImageIcon(scaledLogo));
 		lblLogo.setAlignmentX(CENTER_ALIGNMENT);
 		add(lblLogo);
 		
-		add(Box.createVerticalStrut(8));
+		add(Box.createVerticalGlue());
 		lblLogo2 = new JLabel(new ImageIcon(getClass().getResource("/img/pacman-mov.gif")));
 		lblLogo2.setAlignmentX(CENTER_ALIGNMENT);
 		add(lblLogo2);
 		
-		add(Box.createVerticalStrut(12));
+		add(Box.createVerticalGlue());
 		btnIncio = new JButton("Iniciar");
 		btnIncio.setBackground(Color.yellow);
 		btnIncio.setFocusable(false);
-//		btnIncio = new MyJButton(null, "Iniciar", null, 10, 10);
 		btnIncio.setActionCommand(Commands.PLAY.toString());
 		btnIncio.setAlignmentX(CENTER_ALIGNMENT);
 		btnIncio.addActionListener((ActionListener) control);
 		add(btnIncio);
 		
-		lblSpace1 = new JLabel(" ");
-		lblSpace1.setAlignmentX(CENTER_ALIGNMENT);
-		add(lblSpace1);
+		add(Box.createVerticalStrut(winSize.height < 470 ? 6 : 12));
 		
 		btnAcerca = new JButton("Acerca de");
 		btnAcerca.setBackground(Color.yellow);
 		btnAcerca.setFocusable(false);
-//		btnAcerca = new MyJButton(null, "Acerca de", null, 10, 10);
 		btnAcerca.setActionCommand(Commands.ABOUT.toString());
 		btnAcerca.setAlignmentX(CENTER_ALIGNMENT);
 		btnAcerca.addActionListener((ActionListener) control);
 		add(btnAcerca);
 		
-		lblSpace = new JLabel(" ");
-		lblSpace.setAlignmentX(CENTER_ALIGNMENT);
-		add(lblSpace);
+		add(Box.createVerticalStrut(winSize.height < 470 ? 6 : 12));
 		
 		btnSalir = new JButton("Salir");
 		btnSalir.setBackground(Color.yellow);
 		btnSalir.setFocusable(false);
-//		btnSalir = new MyJButton(null, "Salir", null, 10, 10);
 		btnSalir.setActionCommand(Commands.QUIT.toString());
 		btnSalir.setAlignmentX(CENTER_ALIGNMENT);
 		btnSalir.addActionListener((ActionListener) control);
 		add(btnSalir);
 		
-		lblSpace2 = new JLabel(" ");
-		lblSpace2.setAlignmentX(CENTER_ALIGNMENT);
-		add(lblSpace2);
+		add(Box.createVerticalGlue());
 		
 	}
 	 @Override
 	  protected void paintComponent(Graphics g) {
 	      Graphics2D g2 = (Graphics2D) g.create();
-//	      g.setColor(Utilities.backgroundColor());
 	      g.setColor(Color.black);
 			g.fillRect(0, 0, getWidth(), getHeight());
 	  }

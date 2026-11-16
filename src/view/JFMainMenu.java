@@ -1,6 +1,7 @@
 package view;
 
 import java.awt.BorderLayout;
+import utilities.Utilities;
 import java.awt.Image;
 import java.awt.event.ActionListener;
 
@@ -14,7 +15,7 @@ public class JFMainMenu extends JFrame{
 	Control control;
 	public JFMainMenu(Control control) {
 		setResizable(false);
-		setSize(400, 515);
+		setSize(Utilities.getAdaptiveWindowSize());
 		setLocationRelativeTo(null);
 		setTitle("pacman vrs 9.0 ");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

@@ -31,7 +31,7 @@ public class JFmainFrame extends JFrame{
 		this.control = control;
 //		setSize(Utilities.getDysplaySize());
 		setResizable(false);
-		setSize(400, 515);
+		setSize(Utilities.getAdaptiveWindowSize());
 		setLocationRelativeTo(null);
 //		System.out.println("frame--> "+"w "+getWidth()+" - h "+getHeight());
 		setTitle("pacman vrs 9.0 ");
