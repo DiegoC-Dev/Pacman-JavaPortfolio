@@ -1,6 +1,8 @@
 package view;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
+import utilities.Utilities;
 import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
@@ -25,7 +27,13 @@ public class DialogAbout extends JDialog {
 	private JLabel lbl4;
 
 	public DialogAbout(ActionListener actionListener) {
-		setSize(600, 500);
+		Dimension screen = Utilities.getDysplaySize();
+		if (screen.width <= 550) {
+			Dimension win = Utilities.getAdaptiveWindowSize();
+			setSize(win.width - 8, win.height - 8);
+		} else {
+			setSize(Math.min(600, screen.width - 40), Math.min(500, screen.height - 60));
+		}
 		setTitle("Acerca de");
 		setLocationRelativeTo(null);
 		setResizable(false);

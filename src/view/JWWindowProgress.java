@@ -6,6 +6,8 @@ import javax.swing.JProgressBar;
 import javax.swing.JWindow;
 
 import controller.Control;
+import java.awt.Dimension;
+import utilities.Utilities;
 
 public class JWWindowProgress extends JWindow implements Runnable{
 	/**
@@ -18,7 +20,10 @@ public class JWWindowProgress extends JWindow implements Runnable{
 	private Thread thread;
 	public JWWindowProgress(Control control) {
 		this.control=control;
-		setSize(400, 250);
+		Dimension win = Utilities.getAdaptiveWindowSize();
+		int splashW = Math.min(400, win.width - 12);
+		int splashH = (int) Math.round(splashW * 250.0 / 400.0);
+		setSize(splashW, splashH);
 		setLocationRelativeTo(null);
 		setLayout(new BorderLayout());
 		init();
