@@ -4,8 +4,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Pacman Game - Java Portfolio</title>
-    <!-- CheerpJ WebAssembly Loader -->
-    <script src="https://cjrtnc.leaningtech.com/3.0/cj3loader.js"></script>
+    <!-- CheerpJ WebAssembly Loader (4.2 with WebAudio support) -->
+    <script src="https://cjrtnc.leaningtech.com/4.2/loader.js"></script>
     <style>
         * {
             box-sizing: border-box;
@@ -83,7 +83,21 @@
             return { w, h };
         }
 
+        function unlockWebAudio() {
+            const AudioCtx = window.AudioContext || window.webkitAudioContext;
+            if (AudioCtx && !window.__unlockedAudioCtx) {
+                try {
+                    const ctx = new AudioCtx();
+                    if (ctx.state === 'suspended') {
+                        ctx.resume();
+                    }
+                    window.__unlockedAudioCtx = ctx;
+                } catch (e) {}
+            }
+        }
+        window.addEventListener('pointerdown', unlockWebAudio, { once: true });
         window.addEventListener('keydown', function (e) {
+            unlockWebAudio();
             if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space'].includes(e.code)) {
                 e.preventDefault();
             }
