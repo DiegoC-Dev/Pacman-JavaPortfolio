@@ -69,7 +69,7 @@ public class Control implements KeyListener,ActionListener{
 //		
 //		setCookies();
 //		animate();
-		attachSound();
+//		attachSound();
 	}
 
 	public void init() throws NumberFormatException, InterruptedException {
@@ -207,19 +207,22 @@ public class Control implements KeyListener,ActionListener{
 						accumulator -= NANOS_PER_TICK;
 
 						int currentGameTime = pacmanManager.getGameTime();
-						int waitThreshold = pacmanManager.isInitialSound() ? 1400000 : 1000000;
-						boolean isPlayingPhase = currentGameTime > waitThreshold;
+						boolean isPlayingPhase = !pacmanManager.isInitialSound() && currentGameTime > 1000000;
 
-						pacmanManager.setFruitTime(currentGameTime>1000000?
+						pacmanManager.setFruitTime(isPlayingPhase?
 								pacmanManager.getFruitTime()+1:pacmanManager.getFruitTime());
 //					fruitTime=gameTime >1000000?fruitTime+1:fruitTime;
 						if (pacmanManager.puckman.getLives()!=0) {
 							if (isPlayingPhase) {
 								pacmanManager.setGameTime(currentGameTime+1);
 							} else {
-								int nextGameTime = currentGameTime + WAIT_STEP;
+								int step = pacmanManager.isInitialSound() ? 82 : WAIT_STEP;
+								int nextGameTime = currentGameTime + step;
 								if (currentGameTime < 0 && nextGameTime >= 0) {
 									nextGameTime = 0;
+								}
+								if (pacmanManager.isInitialSound() && nextGameTime > 1000000) {
+									nextGameTime = 1000000;
 								}
 								pacmanManager.setGameTime(nextGameTime);
 							}
@@ -406,10 +409,11 @@ public class Control implements KeyListener,ActionListener{
 		case PLAY:
 			dialogAbout.setVisible(false);
 			jFMainMenu.setVisible(false);
+			pacmanManager.setInitialSound(true);
 			jFmainFrame = new JFmainFrame(this);			
 			setCookies();
-			animate();
 			attachSound();
+			animate();
 
 			break;
 			case ABOUT:
