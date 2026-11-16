@@ -280,6 +280,7 @@ public class Control implements KeyListener,ActionListener{
 		pacmanManager.setGameTime(0);
 		Thread thread = new Thread(new Runnable() {
 			boolean init = true;
+			boolean cherrySpawned = false;
 			boolean victoryTriggered = false;
 			private static final int TICKS_PER_SECOND = 2800;
 			private static final long NANOS_PER_TICK = 1_000_000_000L / TICKS_PER_SECOND;
@@ -329,7 +330,8 @@ public class Control implements KeyListener,ActionListener{
 						}
 //					gameTime=puckman.getLives()!=0?gameTime+1:-1;
 //					System.out.println(gameTime/100000);
-						if (pacmanManager.getNumberCookies()==20) {
+						if (pacmanManager.getNumberCookies()==20 && !cherrySpawned) {
+							cherrySpawned = true;
 							pacmanManager.cherry.setVisibility(true);
 						}
 						if (pacmanManager.getNumberCookies()==30) {

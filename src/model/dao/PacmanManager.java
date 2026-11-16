@@ -115,6 +115,7 @@ public class PacmanManager {
 	public void pacmanRebirth() {
 		if(gameTime==0 && pacmanDeath==true) {
 			puckman.setCoord2d(new Coord2D(217, 416));
+			puckman.updateVirtualFigures();
 			puckman.setDirection(Math.toRadians(0));
 			pacmanDeath=false;
 		}
