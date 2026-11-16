@@ -132,6 +132,85 @@ public class Control implements KeyListener,ActionListener{
 	}
 
 	private boolean soundThreadStarted = false;
+	private volatile boolean powerPelletPlaying = false;
+	private volatile boolean cookieSoundPlaying = false;
+
+	private static void playSoundAsync(final String path) {
+		Thread sfxThread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				playSound(path);
+			}
+		});
+		sfxThread.setDaemon(true);
+		sfxThread.start();
+	}
+
+	private void playCookieSoundAsync() {
+		if (cookieSoundPlaying) {
+			return;
+		}
+		cookieSoundPlaying = true;
+		Thread cookieThread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					playSound("resources/CookieDeath.wav");
+				} finally {
+					cookieSoundPlaying = false;
+				}
+			}
+		});
+		cookieThread.setDaemon(true);
+		cookieThread.start();
+	}
+
+	private void startPowerPelletSound() {
+		if (powerPelletPlaying) {
+			return;
+		}
+		powerPelletPlaying = true;
+		Thread sirenThread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					while (pacmanManager.areGhostsVulnerable()
+							&& pacmanManager.getGameTime() > 1000000
+							&& pacmanManager.getNumberCookies() < 30 && !pacmanManager.map.isEndLevel()
+							&& pacmanManager.puckman.getLives() != 0) {
+						File soundFile = new File("resources/pacman_power_pellet.wav");
+						AudioInputStream audioStream = AudioSystem.getAudioInputStream(soundFile);
+						AudioFormat audioFormat = audioStream.getFormat();
+						DataLine.Info info = new DataLine.Info(SourceDataLine.class, audioFormat);
+						SourceDataLine sourceLine = (SourceDataLine) AudioSystem.getLine(info);
+						sourceLine.open(audioFormat);
+						sourceLine.start();
+						byte[] abData = new byte[4096];
+						int nBytesRead = 0;
+						while (nBytesRead != -1
+								&& pacmanManager.areGhostsVulnerable()
+								&& pacmanManager.getGameTime() > 1000000
+								&& pacmanManager.getNumberCookies() < 30 && !pacmanManager.map.isEndLevel()
+								&& pacmanManager.puckman.getLives() != 0) {
+							nBytesRead = audioStream.read(abData, 0, abData.length);
+							if (nBytesRead >= 0) {
+								sourceLine.write(abData, 0, nBytesRead);
+							}
+						}
+						sourceLine.stop();
+						sourceLine.close();
+						audioStream.close();
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				} finally {
+					powerPelletPlaying = false;
+				}
+			}
+		});
+		sirenThread.setDaemon(true);
+		sirenThread.start();
+	}
 
 	private void attachSound() {
 //		System.out.println("inicio");
@@ -150,20 +229,32 @@ public class Control implements KeyListener,ActionListener{
 						playSound("resources/Inicio.wav");
 						pacmanManager.setInitialSound(false);
 					}
-					if(pacmanManager.isCookieDeathSound()== true) {
-//						playSound("src/CookieDeath.wav");
-						playSound("resources/CookieDeath.wav");
-						pacmanManager.setCookieDeathSound(false);
+					if(pacmanManager.isSuperCookieSound()== true) {
+						pacmanManager.setSuperCookieSound(false);
+						startPowerPelletSound();
+					}
+					if(pacmanManager.isGhostDeathSound()== true) {
+						pacmanManager.setGhostDeathSound(false);
+						playSoundAsync("resources/pacman_eatghost.wav");
+					}
+					if(pacmanManager.isFruitDeathSound()== true) {
+						pacmanManager.setFruitDeathSound(false);
+						playSoundAsync("resources/pacman_eatfruit.wav");
 					}
 					if(pacmanManager.isPacmanDeathSound()== true) {
 //						playSound("src/Final.wav");
-						playSound("resources/Final.wav");
 						pacmanManager.setPacmanDeathSound(false);
+						playSoundAsync("resources/Final.wav");
 					}				
 					if(pacmanManager.isNextLevelSoundSound()== true) {
 //						playSound("src/pacman_intermission.wav");
-						playSound("resources/pacman_intermission.wav");
 						pacmanManager.setNextLevelSoundSound(false);
+						playSoundAsync("resources/pacman_intermission.wav");
+					}
+					if(pacmanManager.isCookieDeathSound()== true) {
+//						playSound("src/CookieDeath.wav");
+						pacmanManager.setCookieDeathSound(false);
+						playCookieSoundAsync();
 					}
 					try {
 						Thread.sleep(20);
@@ -183,6 +274,7 @@ public class Control implements KeyListener,ActionListener{
 		pacmanManager.setGameTime(0);
 		Thread thread = new Thread(new Runnable() {
 			boolean init = true;
+			boolean victoryTriggered = false;
 			private static final int TICKS_PER_SECOND = 2800;
 			private static final long NANOS_PER_TICK = 1_000_000_000L / TICKS_PER_SECOND;
 			private static final long NANOS_PER_FRAME = 1_000_000_000L / 60;
@@ -237,7 +329,9 @@ public class Control implements KeyListener,ActionListener{
 						if (pacmanManager.getNumberCookies()==30) {
 							pacmanManager.freezeCharacters();
 							pacmanManager.map.setVictory(true);
-							if(pacmanManager.map.isEndLevel()==false) {
+							if(!victoryTriggered) {
+								victoryTriggered = true;
+								pacmanManager.setCookieDeathSound(false);
 								pacmanManager.setNextLevelSoundSound(true);
 							}
 //						gameTime = 0;

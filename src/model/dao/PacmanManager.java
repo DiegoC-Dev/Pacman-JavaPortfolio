@@ -48,12 +48,18 @@ public class PacmanManager {
 	private boolean cookieDeathSound;
 	private boolean pacmanDeathSound;
 	private boolean nextLevelSoundSound;
+	private boolean superCookieSound;
+	private boolean ghostDeathSound;
+	private boolean fruitDeathSound;
 	
 	public PacmanManager() {
 		initialSound = false;
 		cookieDeathSound = false;
 		pacmanDeathSound = false;
 		nextLevelSoundSound = false;
+		superCookieSound = false;
+		ghostDeathSound = false;
+		fruitDeathSound = false;
 		
 		numberCookies=0;
 		cherry = new Cherry();
@@ -102,6 +108,7 @@ public class PacmanManager {
 				cherry.setVisibility(false);
 				threadSleep = true;
 				cherry.setLabelScore(true);
+				fruitDeathSound = true;
 			}
 //		}
 	}
@@ -148,6 +155,7 @@ public class PacmanManager {
 			blinky.setMode(Mode.RETURN);
 			score = score+ghostScore;
 			ghostScore = ghostScore*2;
+			ghostDeathSound = true;
 		}
 		if(puckman.getSecundaryVirtualFigure().intersection(pinky.getSecundaryVirtualFigure()) 
 		&& pinky.getMode().equals(Mode.ESCAPE) 
@@ -157,6 +165,7 @@ public class PacmanManager {
 			pinky.setMode(Mode.RETURN);
 			score = score+ghostScore;
 			ghostScore = ghostScore*2;
+			ghostDeathSound = true;
 		}
 		if(puckman.getSecundaryVirtualFigure().intersection(inky.getSecundaryVirtualFigure()) 
 		&& inky.getMode().equals(Mode.ESCAPE) 
@@ -166,6 +175,7 @@ public class PacmanManager {
 			inky.setMode(Mode.RETURN);
 			score = score+ghostScore;
 			ghostScore = ghostScore*2;
+			ghostDeathSound = true;
 		}
 		if(puckman.getSecundaryVirtualFigure().intersection(clyde.getSecundaryVirtualFigure()) 
 		&& clyde.getMode().equals(Mode.ESCAPE) 
@@ -175,6 +185,7 @@ public class PacmanManager {
 			clyde.setMode(Mode.RETURN);
 			score = score+ghostScore;
 			ghostScore = ghostScore*2;
+			ghostDeathSound = true;
 		}		
 //		System.out.println("score gh "+ghostScore);
 			
@@ -275,7 +286,7 @@ public class PacmanManager {
 					pinky.setMode(!pinky.getMode().equals(Mode.RETURN)?Mode.ESCAPE:Mode.RETURN); 
 					inky.setMode(!inky.getMode().equals(Mode.RETURN)?Mode.ESCAPE:Mode.RETURN); 
 					clyde.setMode(!clyde.getMode().equals(Mode.RETURN)?Mode.ESCAPE:Mode.RETURN); 
-					
+					superCookieSound = true;
 //					}
 				}
 				score = setCookies[i].isSuperCookie()?score+50:score+10;
@@ -590,6 +601,37 @@ public class PacmanManager {
 
 	public void setNextLevelSoundSound(boolean nextLevelSoundSound) {
 		this.nextLevelSoundSound = nextLevelSoundSound;
+	}
+
+	public boolean isSuperCookieSound() {
+		return superCookieSound;
+	}
+
+	public void setSuperCookieSound(boolean superCookieSound) {
+		this.superCookieSound = superCookieSound;
+	}
+
+	public boolean isGhostDeathSound() {
+		return ghostDeathSound;
+	}
+
+	public void setGhostDeathSound(boolean ghostDeathSound) {
+		this.ghostDeathSound = ghostDeathSound;
+	}
+
+	public boolean isFruitDeathSound() {
+		return fruitDeathSound;
+	}
+
+	public void setFruitDeathSound(boolean fruitDeathSound) {
+		this.fruitDeathSound = fruitDeathSound;
+	}
+
+	public boolean areGhostsVulnerable() {
+		return blinky.getMode().equals(Mode.ESCAPE) || blinky.getMode().equals(Mode.ESCAPE_ENDING)
+				|| pinky.getMode().equals(Mode.ESCAPE) || pinky.getMode().equals(Mode.ESCAPE_ENDING)
+				|| inky.getMode().equals(Mode.ESCAPE) || inky.getMode().equals(Mode.ESCAPE_ENDING)
+				|| clyde.getMode().equals(Mode.ESCAPE) || clyde.getMode().equals(Mode.ESCAPE_ENDING);
 	}
 	
 	
