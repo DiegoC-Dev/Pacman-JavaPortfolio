@@ -131,15 +131,20 @@ public class Control implements KeyListener,ActionListener{
 		sourceLine.close();
 	}
 
+	private boolean soundThreadStarted = false;
+
 	private void attachSound() {
 //		System.out.println("inicio");
+		if (soundThreadStarted) {
+			return;
+		}
+		soundThreadStarted = true;
 		Thread thread = new Thread(new Runnable() {
 //			boolean init = true;
 
 			@Override
 			public void run() {
 				while (pacmanManager.puckman.getLives()!=0) {
-					System.out.println(" ");
 					if(pacmanManager.isInitialSound()== true) {
 //						playSound("src/Inicio.wav");
 						playSound("resources/Inicio.wav");
@@ -160,10 +165,16 @@ public class Control implements KeyListener,ActionListener{
 						playSound("resources/pacman_intermission.wav");
 						pacmanManager.setNextLevelSoundSound(false);
 					}
-
+					try {
+						Thread.sleep(20);
+					} catch (InterruptedException e) {
+						Thread.currentThread().interrupt();
+						break;
+					}
 				}	
 			}
 		});
+		thread.setDaemon(true);
 		thread.start();
 	}
 	private void animate(){
