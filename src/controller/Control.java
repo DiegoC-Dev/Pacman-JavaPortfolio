@@ -369,7 +369,14 @@ public class Control implements KeyListener,ActionListener{
 					pacmanManager.scoreGhost();
 					pacmanManager.coockieDeath();
 					pacmanManager.ghostRebirth();
+					boolean wasDead = pacmanManager.isPacmanDeath();
 					pacmanManager.pacmanDeath();
+					if (!wasDead && pacmanManager.isPacmanDeath()) {
+						jFmainFrame.repaint();
+						lastTime = System.nanoTime();
+						accumulator = 0;
+						break;
+					}
 					pacmanManager.pacmanRebirth();
 
 						if (pacmanManager.isThreadSleep()) {

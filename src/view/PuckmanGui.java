@@ -125,7 +125,7 @@ public class PuckmanGui extends Puckman{
 		
 	}
 	public void deathAnimation(Graphics graphics) {
-		int divisor = 4000;
+		int divisor = cycle < 4 ? 13200 : 2800;
 		int increase =7;
 		this.graphics = graphics;
 		drawBody(graphics);
