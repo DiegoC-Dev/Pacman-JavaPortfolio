@@ -200,29 +200,29 @@ public class PacmanManager {
 //			ghostScore=0;
 //		}
 		
-		blinky.setTimerLabelScore(blinky.getMode().equals(Mode.RETURN)?(blinky.getTimerLabelScore()+1):0);		
-		if(blinky.getMode().equals(Mode.RETURN) && blinky.getTimerLabelScore()==1) {
+		blinky.setTimerLabelScore(blinky.getMode().equals(Mode.RETURN)?(blinky.getTimerLabelScore()+25):0);		
+		if(blinky.getMode().equals(Mode.RETURN) && blinky.getTimerLabelScore()==25) {
 			blinky.setLabelScore(true);
 			threadSleep = true;
 		}
 		blinky.setLabelScore(blinky.getTimerLabelScore()>4000?false:blinky.isLabelScore());
 		
-		pinky.setTimerLabelScore(pinky.getMode().equals(Mode.RETURN)?(pinky.getTimerLabelScore()+1):0);		
-		if(pinky.getMode().equals(Mode.RETURN) && pinky.getTimerLabelScore()==1) {
+		pinky.setTimerLabelScore(pinky.getMode().equals(Mode.RETURN)?(pinky.getTimerLabelScore()+25):0);		
+		if(pinky.getMode().equals(Mode.RETURN) && pinky.getTimerLabelScore()==25) {
 			pinky.setLabelScore(true);
 			threadSleep = true;
 		}
 		pinky.setLabelScore(pinky.getTimerLabelScore()>4000?false:pinky.isLabelScore());
 
-		inky.setTimerLabelScore(inky.getMode().equals(Mode.RETURN)?(inky.getTimerLabelScore()+1):0);		
-		if(inky.getMode().equals(Mode.RETURN) && inky.getTimerLabelScore()==1) {
+		inky.setTimerLabelScore(inky.getMode().equals(Mode.RETURN)?(inky.getTimerLabelScore()+25):0);		
+		if(inky.getMode().equals(Mode.RETURN) && inky.getTimerLabelScore()==25) {
 			inky.setLabelScore(true);
 			threadSleep = true;
 		}
 		inky.setLabelScore(inky.getTimerLabelScore()>4000?false:inky.isLabelScore());
 
-		clyde.setTimerLabelScore(clyde.getMode().equals(Mode.RETURN)?(clyde.getTimerLabelScore()+1):0);		
-		if(clyde.getMode().equals(Mode.RETURN) && clyde.getTimerLabelScore()==1) {
+		clyde.setTimerLabelScore(clyde.getMode().equals(Mode.RETURN)?(clyde.getTimerLabelScore()+25):0);		
+		if(clyde.getMode().equals(Mode.RETURN) && clyde.getTimerLabelScore()==25) {
 			clyde.setLabelScore(true);
 			threadSleep = true;
 		}

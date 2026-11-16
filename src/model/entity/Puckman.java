@@ -34,12 +34,12 @@ public class Puckman extends Character{
 		selectedWall=null;
 	}
 	public void move() {
-		moveTimer++;
+		moveTimer+=25;
 		if(moveTimer>900) {
 			moveTimer=1;
 		}
 		if(speed==0) {
-			moveTimer--;
+			moveTimer-=25;
 		}
 //		System.out.println("velocidad pacman "+speed);
 //	public void move(double time) {
@@ -55,7 +55,7 @@ public class Puckman extends Character{
 		}
 	}
 	public void deathTimer() {
-		deathTimer++;
+		deathTimer+=25;
 		if(deathTimer>1000000) {
 			deathTimer=1;
 		}

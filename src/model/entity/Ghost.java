@@ -75,7 +75,7 @@ public class Ghost extends Character{
 	}
 	protected void timerConditions() {
 		if(mode.equals(mode.ESCAPE) || mode.equals(mode.ESCAPE_ENDING)) {
-			timer+=4;
+			timer+=100;
 			if(timer == 60000 || timer == 65000 || timer == 70000 
 					|| timer == 75000 || timer == 80000) {
 				setMode(mode.ESCAPE_ENDING);
@@ -100,7 +100,7 @@ public class Ghost extends Character{
 			timer = 0;
 		}
 		if (mode.equals(mode.STALK)) {
-			timer+=4;
+			timer+=100;
 //			System.out.println(timer);
 			if(timer>=4000) {
 				timer=0;

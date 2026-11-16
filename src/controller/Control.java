@@ -282,10 +282,10 @@ public class Control implements KeyListener,ActionListener{
 			boolean init = true;
 			boolean cherrySpawned = false;
 			boolean victoryTriggered = false;
-			private static final int TICKS_PER_SECOND = 2800;
+			private static final int TICKS_PER_SECOND = 112;
 			private static final long NANOS_PER_TICK = 1_000_000_000L / TICKS_PER_SECOND;
 			private static final long NANOS_PER_FRAME = 1_000_000_000L / 60;
-			private static final int WAIT_STEP = 120;
+			private static final int WAIT_STEP = 3000;
 
 			@Override
 			public void run() {
@@ -309,13 +309,13 @@ public class Control implements KeyListener,ActionListener{
 						boolean isPlayingPhase = !pacmanManager.isInitialSound() && currentGameTime > 1000000;
 
 						pacmanManager.setFruitTime(isPlayingPhase?
-								pacmanManager.getFruitTime()+1:pacmanManager.getFruitTime());
+								pacmanManager.getFruitTime()+25:pacmanManager.getFruitTime());
 //					fruitTime=gameTime >1000000?fruitTime+1:fruitTime;
 						if (pacmanManager.puckman.getLives()!=0) {
 							if (isPlayingPhase) {
-								pacmanManager.setGameTime(currentGameTime+1);
+								pacmanManager.setGameTime(currentGameTime+25);
 							} else {
-								int step = pacmanManager.isInitialSound() ? 82 : WAIT_STEP;
+								int step = pacmanManager.isInitialSound() ? 2050 : WAIT_STEP;
 								int nextGameTime = currentGameTime + step;
 								if (currentGameTime < 0 && nextGameTime >= 0) {
 									nextGameTime = 0;
@@ -358,7 +358,7 @@ public class Control implements KeyListener,ActionListener{
 						pacmanManager.pinky.movetimer();
 						pacmanManager.inky.movetimer();
 						pacmanManager.clyde.movetimer();
-							for (int i = 0; i < WAIT_STEP; i++) {
+							for (int i = 0; i < 120; i++) {
 								pacmanManager.puckman.deathTimer();
 							}
 //						puckman.movetimer();

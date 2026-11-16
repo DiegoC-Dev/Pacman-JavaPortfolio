@@ -20,7 +20,7 @@ public class Fruit extends Food{
 	}
 	public void activateTimer() {
 		if(visibility==true) {
-			timer++;
+			timer+=25;
 //			System.out.println(timer);
 			if(timer==40000) {
 				setVisibility(false);
@@ -45,7 +45,7 @@ public class Fruit extends Food{
 	}
 	public void scoreFruit() {
 		if(labelScore == true) {
-			timerLabelScore++;
+			timerLabelScore+=25;
 			if(timerLabelScore>4000) {
 				labelScore= false;
 				timerLabelScore = 0;

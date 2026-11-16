@@ -29,7 +29,7 @@ public class Character {
 		super();
 		moveTimer = 0;
 		setWalls = MapGui.getWalls();
-		deltaTime=1;
+		deltaTime=25;
 		time = (double)deltaTime/100000;
 		referenceSpeed=PacmanManager.vel;
 		this.size = 31;//total
@@ -123,7 +123,7 @@ public class Character {
 	
 	
 	public void movetimer() {
-		moveTimer++;
+		moveTimer+=25;
 		if(moveTimer>900) {
 			moveTimer=1;
 		}
