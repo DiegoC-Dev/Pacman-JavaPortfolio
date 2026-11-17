@@ -64,6 +64,9 @@
             overflow: hidden;
             flex-shrink: 0;
         }
+        body.is-touch #game-wrapper {
+            touch-action: none;
+        }
         #mobile-controls {
             display: none;
             grid-template-columns: repeat(3, 56px);
@@ -199,6 +202,62 @@
             btn.addEventListener('mousedown', handlePress);
             btn.addEventListener('mouseup', handleRelease);
         });
+
+        // Swipe gestures on game board (supports chained swipes without blocking menu taps)
+        (function setupSwipeControls() {
+            const gameEl = document.getElementById('game-wrapper');
+            if (!gameEl) return;
+            const SWIPE_THRESHOLD = 24;
+            let startX = 0;
+            let startY = 0;
+            let tracking = false;
+
+            gameEl.addEventListener('touchstart', function (e) {
+                if (e.touches.length !== 1) {
+                    tracking = false;
+                    return;
+                }
+                unlockWebAudio();
+                startX = e.touches[0].clientX;
+                startY = e.touches[0].clientY;
+                tracking = true;
+            }, { passive: true });
+
+            gameEl.addEventListener('touchmove', function (e) {
+                if (!tracking || e.touches.length !== 1) return;
+                const curX = e.touches[0].clientX;
+                const curY = e.touches[0].clientY;
+                const dx = curX - startX;
+                const dy = curY - startY;
+
+                if (Math.abs(dx) < SWIPE_THRESHOLD && Math.abs(dy) < SWIPE_THRESHOLD) {
+                    return;
+                }
+
+                e.preventDefault();
+                let keyName, keyCode;
+                if (Math.abs(dx) > Math.abs(dy)) {
+                    keyName = dx > 0 ? 'ArrowRight' : 'ArrowLeft';
+                    keyCode = dx > 0 ? 39 : 37;
+                } else {
+                    keyName = dy > 0 ? 'ArrowDown' : 'ArrowUp';
+                    keyCode = dy > 0 ? 40 : 38;
+                }
+
+                dispatchVirtualKey('keydown', keyName, keyCode);
+                setTimeout(function () {
+                    dispatchVirtualKey('keyup', keyName, keyCode);
+                }, 60);
+
+                // Reset origin so continuous chained swipes work without lifting the finger
+                startX = curX;
+                startY = curY;
+            }, { passive: false });
+
+            gameEl.addEventListener('touchend', function () {
+                tracking = false;
+            }, { passive: true });
+        })();
 
         async function run() {
             try {
