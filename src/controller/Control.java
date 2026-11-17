@@ -229,7 +229,7 @@ public class Control implements KeyListener,ActionListener{
 
 			@Override
 			public void run() {
-				while (pacmanManager.puckman.getLives()!=0) {
+				while (pacmanManager.puckman.getLives() > 0 || pacmanManager.isPacmanDeathSound() || pacmanManager.isNextLevelSoundSound()) {
 					if(pacmanManager.isInitialSound()== true) {
 //						playSound("src/Inicio.wav");
 						playSound("resources/Inicio.wav");
@@ -363,21 +363,23 @@ public class Control implements KeyListener,ActionListener{
 							}
 //						puckman.movetimer();
 						}
-						pacmanManager.fruitDeath();
-						pacmanManager.scoreFruit();
-						pacmanManager.ghostDeath();
-					pacmanManager.scoreGhost();
-					pacmanManager.coockieDeath();
-					pacmanManager.ghostRebirth();
-					boolean wasDead = pacmanManager.isPacmanDeath();
-					pacmanManager.pacmanDeath();
-					if (!wasDead && pacmanManager.isPacmanDeath()) {
-						jFmainFrame.repaint();
-						lastTime = System.nanoTime();
-						accumulator = 0;
-						break;
-					}
-					pacmanManager.pacmanRebirth();
+						if (isPlayingPhase) {
+							pacmanManager.fruitDeath();
+							pacmanManager.scoreFruit();
+							pacmanManager.ghostDeath();
+							pacmanManager.scoreGhost();
+							pacmanManager.coockieDeath();
+							pacmanManager.ghostRebirth();
+							boolean wasDead = pacmanManager.isPacmanDeath();
+							pacmanManager.pacmanDeath();
+							if (!wasDead && pacmanManager.isPacmanDeath()) {
+								jFmainFrame.repaint();
+								lastTime = System.nanoTime();
+								accumulator = 0;
+								break;
+							}
+						}
+						pacmanManager.pacmanRebirth();
 
 						if (pacmanManager.isThreadSleep()) {
 							jFmainFrame.repaint();

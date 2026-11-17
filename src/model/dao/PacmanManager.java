@@ -229,6 +229,9 @@ public class PacmanManager {
 		clyde.setLabelScore(clyde.getTimerLabelScore()>4000?false:clyde.isLabelScore());
 	}
 	public void pacmanDeath() {
+		if (pacmanDeath || puckman.getLives() <= 0) {
+			return;
+		}
 		if(puckman.getSecundaryVirtualFigure().intersection(blinky.getSecundaryVirtualFigure()) 
 				&& blinky.getMode().equals(Mode.CHASE)
 				||
