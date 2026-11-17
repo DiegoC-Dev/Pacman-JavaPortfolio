@@ -37,8 +37,20 @@ public class ClydeGui extends Clyde{
 	public void initialConditions(Graphics graphics) {
 		this.graphics = graphics;
 		virtualClyde = getVirtualFigure();
-		actualColor = mode.equals(mode.CHASE)?this.color: mode.equals(mode.ESCAPE)?Color.blue:  
-			mode.equals(mode.ESCAPE_ENDING)?Color.white:Color.DARK_GRAY;
+		switch (mode) {
+		case ESCAPE:
+			actualColor = Color.blue;
+			break;
+		case ESCAPE_ENDING:
+			actualColor = Color.white;
+			break;
+		case CHASE:
+		case STALK:
+		case RETURN:
+		default:
+			actualColor = this.color;
+			break;
+		}
 		int inc = mode.equals(mode.RETURN)?16*14:16*12; 
 		graphics.setColor(actualColor);
 	}
